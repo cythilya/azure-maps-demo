@@ -1,71 +1,67 @@
-import React, {
+import {
   useContext,
   useEffect,
-  useState,
-  useMemo
+  useMemo,
+  useState
 } from 'react';
-import { AzureMapsContext, AzureMapHtmlMarker, AzureMapPopup, useCreatePopup, AzureMapFeature } from 'react-azure-maps';
-import { layer, source, azureHtmlMapMarkerOptions } from 'azure-maps-control';
-import { API_PATH, SUBSCRIPTION_KEY } from '../../app/constants';
+import Box from '@mui/material/Box';
+import {
+  AzureMapFeature,
+  AzureMapHtmlMarker,
+  AzureMapPopup,
+  AzureMapsContext,
+} from 'react-azure-maps';
+import { layer, source } from 'azure-maps-control';
+import { INITIAL_POSITION } from '../../app/constants';
+import pin from './location-pin.png';
 
 const dataSourceRef = new source.DataSource();
 const layerRef = new layer.SymbolLayer(dataSourceRef);
-const INITIAL_POSITION = [-74.0060, 40.7128];
-const MOCK_CENTER_POSITION = [121.5598, 25.09108];
 
-const MapController = () => {
-  const [data, setData] = useState(null);
-  const [markers, setMarkers] = useState([INITIAL_POSITION]);
-  const [htmlMarkers, setHtmlMarkers] = useState([INITIAL_POSITION]);
+const MapController = ({ selectedPosition, selectedDetail }) => {
   const { mapRef, isMapReady } = useContext(AzureMapsContext);
-  const markerPosition = INITIAL_POSITION ; // TODO: Latitude and Longitude of the marker
+  const [markers, setMarkers] = useState([selectedPosition || INITIAL_POSITION]);
+  const [htmlMarkers, setHtmlMarkers] = useState([selectedPosition || INITIAL_POSITION]);
 
   const onClick = (e) => {
-    console.log('You click on: ', e);
+    console.log('You click on the pin!');
   };
 
+  const azureHtmlMapMarkerOptions = (coordinates) => {
+    return {
+      position: coordinates,
+      text: 'My text',
+      title: 'Title',
+    };
+  };
 
-  const memoizedHtmlMarkerRender = useMemo(
-    () => htmlMarkers.map((marker) => renderHTMLPoint(marker)),
-    [htmlMarkers],
-  );
-  const renderPoint = (coordinates) => {
-    const rendId = Math.random();
-
-    console.log('rendId', rendId)
-
+  const renderHTMLPoint = (coordinates) => {
     return (
-      <AzureMapFeature
-        type="Point"
-        coordinates={INITIAL_POSITION}
-        properties={{
-          title: 'Marker Title',
-          description: 'Marker Description'
-        }}
-        options={{
-          iconOptions: {
-            image: 'your_marker_icon_url.svg', // Replace with your custom marker icon URL
-            allowOverlap: true,
-            anchor: 'center',
-            size: 1
-          }
-        }}
+      <AzureMapHtmlMarker
+        events={[{ eventName: 'click', callback: onClick }]}
+        isPopupVisible={true}
+        key={Math.random()}
+        markerContent={<div>{selectedDetail?.name || 'New York City Hall'}</div>}
+        options={{...azureHtmlMapMarkerOptions(coordinates)}}
       />
     );
-  };
+  }
 
-  const memoizedMarkerRender = useMemo(
-    ()  => markers.map((marker) => renderPoint(marker)),
-    [markers],
-  );
+  const memoizedHtmlMarkerRender = useMemo(() => {
+    console.log('memoizedHtmlMarkerRender')
+    return htmlMarkers.map((marker) => renderHTMLPoint(marker))
+  }, [htmlMarkers, selectedPosition]);
 
+  useEffect(() => {
+    changeMapCenter(selectedPosition);
+  }, [selectedPosition]);
 
-  const changeMapCenter = () => {
+  const changeMapCenter = (selectedPosition) => {
     if (mapRef) {
       mapRef.setCamera({
-        center: MOCK_CENTER_POSITION,
+        center: selectedPosition,
         zoom: 17
-      }); // TODO
+      });
     }
   };
 
@@ -77,120 +73,43 @@ const MapController = () => {
     }
   }, [isMapReady]);
 
-  // fetch query list by keyword
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch(`${API_PATH.SEARCH}&` + new URLSearchParams({
-        'subscription-key': SUBSCRIPTION_KEY,
-        query: 'pizza',
-        lat: 40.712784779958255,
-        lon: -74.00600910186768,
-        view: 'Auto'
-      }));
-
-      const result = await response.json();
-      setData(result);
-    };
-
-    fetchData();
-  }, []);
-  console.log('data', data); // TODO
-
-
-  function renderHTMLPoint(coordinates){
-    console.log('renderHTMLPoint')
-    const rendId = Math.random();
-    return (
-      <AzureMapHtmlMarker
-        markerContent={<div className="pulseIcon">Hello!</div>}
-        options={{
-          ...azureHtmlMapMarkerOptions(coordinates) ,
-        }}
-        events={[{ eventName: 'click', callback: onClick }]}
-        isPopupVisible={true}
-        key={rendId}
-      />
-    );
-  }
-
-  function azureHtmlMapMarkerOptions(coordinates) {
-    return {
-      position: coordinates,
-      text: 'My text',
-      title: 'Title',
-    };
-  }
-
-  const eventToMarker = [{ eventName: 'click', callback: onClick }];
-  const rendId = Math.random();
-
-
-const popupOptions = {
-  position: INITIAL_POSITION,
-};
-
   const memoizedMapPopup = useMemo(
     () => (
       <AzureMapPopup
         isVisible={true}
-        options={popupOptions}
-        popupContent={<div>memoizedMapPopup</div>}
+        options={{position: INITIAL_POSITION}}
+        popupContent={
+          <div style={{ padding: '10px' }}>
+            <h3>{selectedDetail?.name || 'New York City Hall'}</h3>
+            <a href={selectedDetail?.url || 'sample.com.tw'} target="_blank">
+              {selectedDetail?.url || 'sample.com.tw'}
+            </a>
+          </div>
+        }
       />
     ),
-    [isMapReady],
+    [isMapReady, selectedPosition],
   );
 
   // show the list in search result
   return (
-    <>
-    {memoizedMarkerRender}
-    {memoizedHtmlMarkerRender}
-    {
-      memoizedMapPopup
-    }
+    <Box>
+      {memoizedHtmlMarkerRender}
+      {memoizedMapPopup}
       <AzureMapHtmlMarker
-          key={rendId}
-          markerContent={<div className="pulseIcon">Hello</div>}
+          key={Math.random()}
+          markerContent={<div><image width="40" src={pin} /></div>}
           options={{
             ...azureHtmlMapMarkerOptions(INITIAL_POSITION),
           }}
-          events={eventToMarker}
+          events={[{ eventName: 'click', callback: onClick }]}
       >
         <div style={{ backgroundColor: 'red', padding: '5px', borderRadius: '5px', width: '100px', height: '100px' }}>
           This is a marker
         </div>
-      </AzureMapHtmlMarker>H
-      {
-        data && (
-          <ul>
-            {data.results.map((item, index) => (
-              <li key={index} onClick={changeMapCenter}>{item.poi.name}</li>
-            ))}
-          </ul>
-        )
-      }
-    </>
+      </AzureMapHtmlMarker>
+    </Box>
   );
-};
-
-const styles = {
-  map: {
-    height: 300,
-  },
-  buttonContainer: {
-    display: 'grid',
-    gridAutoFlow: 'column',
-    gridGap: '10px',
-    gridAutoColumns: 'max-content',
-    padding: '10px 0',
-    alignItems: 'center',
-  },
-  button: {
-    height: 35,
-    width: 80,
-    backgroundColor: '#68aba3',
-    'text-align': 'center',
-  },
 };
 
 export default MapController;

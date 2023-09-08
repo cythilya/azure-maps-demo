@@ -1,37 +1,42 @@
-import React, { useEffect } from 'react';
+import { useState } from 'react';
+import Stack from '@mui/material/Stack';
 import {
-  AzureMap,
-  AzureMapsProvider,
   AuthenticationType,
-  CameraOptions
+  AzureMap,
+  AzureMapsProvider
 } from 'react-azure-maps';
+import LocationList from './LocationList';
 import MapController from './MapController';
-// import styles from './SearchLocation.module.css';
+import { INITIAL_POSITION, SUBSCRIPTION_KEY } from '../../app/constants';
 
 const option = {
-  center: [-74.0060, 40.7128],
-  zoom: 14,
-  view: 'Auto',
   authOptions: {
-    subscriptionKey: process.env['REACT_APP_SUBSCRIPTION_KEY'],
     authType: AuthenticationType.subscriptionKey,
+    subscriptionKey: SUBSCRIPTION_KEY,
   },
+  center: INITIAL_POSITION,
+  view: 'Auto',
+  zoom: 14,
 };
 
 const SearchLocation = () => {
-  let minSearchInputLength = 3; // The minimum number of characters needed in the search input before a search is performed.
-  let keyStrokeDelay = 150; // The number of ms between key strokes to wait before performing a search.
+  const [selectedPosition, setSelectedPosition] = useState(INITIAL_POSITION);
+  const [selectedDetail, setSelectedDetail] = useState(null);
 
   return (
     <AzureMapsProvider>
-      <div style={{ width: '100%', height: '600px' }}>
-        <AzureMap options={option} />
-        <MapController />
-      </div>
-  </AzureMapsProvider>
+      <Stack direction="row" spacing={2}>
+        <div style={{ width: '100%', height: '600px' }}>
+          <AzureMap options={option} />
+          <MapController selectedPosition={selectedPosition} selectedDetail={selectedDetail} />
+        </div>
+        <LocationList
+          setSelectedPosition={setSelectedPosition}
+          setSelectedDetail={setSelectedDetail}
+        />
+      </Stack>
+    </AzureMapsProvider>
   );
 };
 
 export default SearchLocation;
-
-// ref: https://codesandbox.io/s/map-forked-6nbwi?file=/src/App.js
