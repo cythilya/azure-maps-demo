@@ -6,7 +6,6 @@ import {
 } from 'react';
 import Box from '@mui/material/Box';
 import {
-  AzureMapFeature,
   AzureMapHtmlMarker,
   AzureMapPopup,
   AzureMapsContext,
@@ -20,25 +19,18 @@ const layerRef = new layer.SymbolLayer(dataSourceRef);
 
 const MapController = ({ selectedPosition, selectedDetail }) => {
   const { mapRef, isMapReady } = useContext(AzureMapsContext);
-  const [markers, setMarkers] = useState([selectedPosition || INITIAL_POSITION]);
   const [htmlMarkers, setHtmlMarkers] = useState([selectedPosition || INITIAL_POSITION]);
 
-  const onClick = (e) => {
-    console.log('You click on the pin!');
-  };
-
-  const azureHtmlMapMarkerOptions = (coordinates) => {
+  const azureHtmlMapMarkerOptions = () => {
     return {
-      position: coordinates,
-      text: 'My text',
-      title: 'Title',
+      position: selectedPosition,
+      title: selectedDetail?.name,
     };
   };
 
   const renderHTMLPoint = (coordinates) => {
     return (
       <AzureMapHtmlMarker
-        events={[{ eventName: 'click', callback: onClick }]}
         isPopupVisible={true}
         key={Math.random()}
         markerContent={<div>{selectedDetail?.name || 'New York City Hall'}</div>}
@@ -48,7 +40,6 @@ const MapController = ({ selectedPosition, selectedDetail }) => {
   }
 
   const memoizedHtmlMarkerRender = useMemo(() => {
-    console.log('memoizedHtmlMarkerRender')
     return htmlMarkers.map((marker) => renderHTMLPoint(marker))
   }, [htmlMarkers, selectedPosition]);
 
@@ -60,7 +51,7 @@ const MapController = ({ selectedPosition, selectedDetail }) => {
     if (mapRef) {
       mapRef.setCamera({
         center: selectedPosition,
-        zoom: 17
+        zoom: 15
       });
     }
   };
@@ -77,7 +68,7 @@ const MapController = ({ selectedPosition, selectedDetail }) => {
     () => (
       <AzureMapPopup
         isVisible={true}
-        options={{position: INITIAL_POSITION}}
+        options={{position: selectedPosition }}
         popupContent={
           <div style={{ padding: '10px' }}>
             <h3>{selectedDetail?.name || 'New York City Hall'}</h3>
@@ -91,7 +82,6 @@ const MapController = ({ selectedPosition, selectedDetail }) => {
     [isMapReady, selectedPosition],
   );
 
-  // show the list in search result
   return (
     <Box>
       {memoizedHtmlMarkerRender}
@@ -102,11 +92,7 @@ const MapController = ({ selectedPosition, selectedDetail }) => {
           options={{
             ...azureHtmlMapMarkerOptions(INITIAL_POSITION),
           }}
-          events={[{ eventName: 'click', callback: onClick }]}
       >
-        <div style={{ backgroundColor: 'red', padding: '5px', borderRadius: '5px', width: '100px', height: '100px' }}>
-          This is a marker
-        </div>
       </AzureMapHtmlMarker>
     </Box>
   );
