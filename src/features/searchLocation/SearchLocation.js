@@ -20,7 +20,7 @@ const option = {
 };
 
 const SearchLocation = () => {
-  const [selectedPosition, setSelectedPosition] = useState(INITIAL_POSITION);
+  const [selectedPosition, setSelectedPosition] = useState(null);
   const [selectedDetail, setSelectedDetail] = useState(null);
 
   return (

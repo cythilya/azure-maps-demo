@@ -67,13 +67,13 @@ const MapController = ({ selectedPosition, selectedDetail }) => {
   const memoizedMapPopup = useMemo(
     () => (
       <AzureMapPopup
-        isVisible={true}
+        isVisible={!!selectedPosition}
         options={{position: selectedPosition }}
         popupContent={
           <div style={{ padding: '10px' }}>
-            <h3>{selectedDetail?.name || 'New York City Hall'}</h3>
-            <a href={selectedDetail?.url || 'sample.com.tw'} target="_blank">
-              {selectedDetail?.url || 'sample.com.tw'}
+            <h3>{selectedDetail?.name}</h3>
+            <a href={selectedDetail?.url} target="_blank">
+              {selectedDetail?.url}
             </a>
           </div>
         }
