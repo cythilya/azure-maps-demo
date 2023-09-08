@@ -51,17 +51,6 @@ const MapController = () => {
           }
         }}
       />
-      // <AzureMapFeature
-      //   className={rendId}
-      //   key={rendId}
-      //   id={rendId.toString()}
-      //   type="Point"
-      //   coordinate={coordinates}
-      //   properties={{
-      //     title: 'Pin',
-      //     icon: 'pin-round-blue',
-      //   }}
-      // />
     );
   };
 
@@ -114,7 +103,9 @@ const MapController = () => {
     return (
       <AzureMapHtmlMarker
         markerContent={<div className="pulseIcon">Hello!</div>}
-        options={{ ...azureHtmlMapMarkerOptions(coordinates) }}
+        options={{
+          ...azureHtmlMapMarkerOptions(coordinates) ,
+        }}
         events={[{ eventName: 'click', callback: onClick }]}
         isPopupVisible={true}
         key={rendId}
@@ -133,21 +124,42 @@ const MapController = () => {
   const eventToMarker = [{ eventName: 'click', callback: onClick }];
   const rendId = Math.random();
 
+
+const popupOptions = {
+  position: INITIAL_POSITION,
+};
+
+  const memoizedMapPopup = useMemo(
+    () => (
+      <AzureMapPopup
+        isVisible={true}
+        options={popupOptions}
+        popupContent={<div>memoizedMapPopup</div>}
+      />
+    ),
+    [isMapReady],
+  );
+
   // show the list in search result
   return (
     <>
     {memoizedMarkerRender}
     {memoizedHtmlMarkerRender}
+    {
+      memoizedMapPopup
+    }
       <AzureMapHtmlMarker
           key={rendId}
           markerContent={<div className="pulseIcon">Hello</div>}
-          options={{ ...azureHtmlMapMarkerOptions(INITIAL_POSITION) }}
+          options={{
+            ...azureHtmlMapMarkerOptions(INITIAL_POSITION),
+          }}
           events={eventToMarker}
       >
         <div style={{ backgroundColor: 'red', padding: '5px', borderRadius: '5px', width: '100px', height: '100px' }}>
           This is a marker
         </div>
-      </AzureMapHtmlMarker>
+      </AzureMapHtmlMarker>H
       {
         data && (
           <ul>
