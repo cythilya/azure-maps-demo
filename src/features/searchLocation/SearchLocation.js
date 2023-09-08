@@ -24,7 +24,7 @@ const SearchLocation = () => {
 
   return (
     <AzureMapsProvider>
-      <div style={{ height: '300px' }}>
+      <div style={{ width: '100%', height: '600px' }}>
         <AzureMap options={option} />
         <MapController />
       </div>
