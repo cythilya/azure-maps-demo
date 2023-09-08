@@ -2,7 +2,8 @@ import React, { useEffect } from 'react';
 import {
   AzureMap,
   AzureMapsProvider,
-  AuthenticationType
+  AuthenticationType,
+  CameraOptions
 } from 'react-azure-maps';
 import MapController from './MapController';
 // import styles from './SearchLocation.module.css';
@@ -20,10 +21,6 @@ const option = {
 const SearchLocation = () => {
   let minSearchInputLength = 3; // The minimum number of characters needed in the search input before a search is performed.
   let keyStrokeDelay = 150; // The number of ms between key strokes to wait before performing a search.
-
-  useEffect(() => {
-
-  }, []);
 
   return (
     <AzureMapsProvider>
