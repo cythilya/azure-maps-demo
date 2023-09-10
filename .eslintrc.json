@@ -1,0 +1,24 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": "airbnb",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "ignorePatterns": ["**/**.test.js"],
+  "rules": {
+    "max-len": [2, { "code": 150 }],
+    "react/jsx-max-props-per-line": [2, { "maximum": { "single": 3, "multi": 1 } }],
+    "react/jsx-wrap-multilines": 2,
+    "react/jsx-uses-react": "off",
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-filename-extension": [ 1, {
+      "extensions": [".js", ".jsx"]
+    }],
+    "semi": 2,
+    "react/prop-types": 0
+  }
+}

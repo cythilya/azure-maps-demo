@@ -4,7 +4,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import SearhcBox from './SearhBox';
 
-const LocationList = ({ setSelectedPosition, setSelectedDetail }) => {
+function LocationList({ setSelectedPosition, setSelectedDetail }) {
   const [locationList, setLocationList] = useState([]);
 
   const setSelectedLocationInfo = (item) => {
@@ -27,16 +27,16 @@ const LocationList = ({ setSelectedPosition, setSelectedDetail }) => {
     >
       <SearhcBox setLocationList={setLocationList} />
       <ul>
-      {
+        {
         locationList.map((item) => (
-          <ListItem key={item.id} onClick={() => { setSelectedLocationInfo(item) }}>
+          <ListItem key={item.id} onClick={() => { setSelectedLocationInfo(item); }}>
             <ListItemText primary={item.poi.name} />
           </ListItem>
         ))
       }
       </ul>
     </List>
-  )
-};
+  );
+}
 
 export default LocationList;

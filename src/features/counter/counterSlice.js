@@ -7,20 +7,26 @@ export const counterSlice = createSlice({
   },
   reducers: {
     increment: (state) => {
+      const nextState = state;
       // Redux Toolkit allows us to write "mutating" logic in reducers. It
       // doesn't actually mutate the state because it uses the immer library,
       // which detects changes to a "draft state" and produces a brand new
       // immutable state based off those changes
-      state.value += 1;
+      nextState.value += 1;
+      return nextState;
     },
     decrement: (state) => {
-      state.value -= 1;
+      const nextState = state;
+      nextState.value -= 1;
+      return nextState;
     },
     incrementByAmount: (state, action) => {
-      state.value += action.payload;
+      const nextState = state;
+      nextState.value += action.payload;
+      return nextState;
     },
   },
-})
+});
 
 export const { increment, decrement, incrementByAmount } = counterSlice.actions;
 
@@ -30,9 +36,9 @@ export const { increment, decrement, incrementByAmount } = counterSlice.actions;
 // code can then be executed and other actions can be dispatched
 export const incrementAsync = (amount) => (dispatch) => {
   setTimeout(() => {
-    dispatch(incrementByAmount(amount))
+    dispatch(incrementByAmount(amount));
   }, 1000);
-}
+};
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of

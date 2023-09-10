@@ -1,4 +1,4 @@
-export const SUBSCRIPTION_KEY = process.env['REACT_APP_SUBSCRIPTION_KEY'];
+export const SUBSCRIPTION_KEY = process.env.REACT_APP_SUBSCRIPTION_KEY;
 
 export const INITIAL_POSITION = [-74.0060, 40.7128];
 

@@ -3,7 +3,7 @@ import Stack from '@mui/material/Stack';
 import {
   AuthenticationType,
   AzureMap,
-  AzureMapsProvider
+  AzureMapsProvider,
 } from 'react-azure-maps';
 import LocationList from './LocationList';
 import MapController from './MapController';
@@ -19,7 +19,7 @@ const option = {
   zoom: 14,
 };
 
-const SearchLocation = () => {
+function SearchLocation() {
   const [selectedPosition, setSelectedPosition] = useState(null);
   const [selectedDetail, setSelectedDetail] = useState(null);
 
@@ -37,6 +37,6 @@ const SearchLocation = () => {
       </Stack>
     </AzureMapsProvider>
   );
-};
+}
 
 export default SearchLocation;

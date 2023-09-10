@@ -1,5 +1,4 @@
-import React from 'react';
-import SearchLocation from './features/searchLocation/SearchLocation.js';
+import SearchLocation from './features/searchLocation/SearchLocation';
 import './App.css';
 
 function App() {
