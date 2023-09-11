@@ -1,6 +1,10 @@
 # Azure Maps Demo
 
-## Setup
+## Background
+
+Here is a demo showcasing the process: performing a keyword search to find matching locations, and then marking the selected location on the map for further details.
+
+### Setup
 
 - Clone this project.
 - Install dependencies by using yarn.
