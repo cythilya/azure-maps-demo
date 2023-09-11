@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import { API_PATH, SUBSCRIPTION_KEY } from '../../app/constants';
+import {
+  API_PATH,
+  INITIAL_POSITION,
+  SUBSCRIPTION_KEY,
+} from '../../app/constants';
 
 function SearhcBox({ setLocationList }) {
   const [query, setQuery] = useState('');
@@ -11,8 +15,8 @@ function SearhcBox({ setLocationList }) {
     const response = await fetch(`${API_PATH.SEARCH}&${new URLSearchParams({
       'subscription-key': SUBSCRIPTION_KEY,
       query: keyword,
-      lat: 40.712784779958255,
-      lon: -74.00600910186768,
+      lat: INITIAL_POSITION[1],
+      lon: INITIAL_POSITION[0],
       view: 'Auto',
     })}`);
 

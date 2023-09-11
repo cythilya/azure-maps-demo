@@ -5,7 +5,7 @@ import {
   AzureMap,
   AzureMapsProvider,
 } from 'react-azure-maps';
-import LocationList from './LocationList';
+import SearchResultList from './SearchResultList';
 import MapController from './MapController';
 import { INITIAL_POSITION, SUBSCRIPTION_KEY } from '../../app/constants';
 
@@ -30,7 +30,7 @@ function SearchLocation() {
           <AzureMap options={option} />
           <MapController selectedPosition={selectedPosition} selectedDetail={selectedDetail} />
         </div>
-        <LocationList
+        <SearchResultList
           setSelectedPosition={setSelectedPosition}
           setSelectedDetail={setSelectedDetail}
         />
